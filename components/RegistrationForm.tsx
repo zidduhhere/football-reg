@@ -197,12 +197,12 @@ export default function RegistrationForm({ availableCountries }: { availableCoun
               </p>
 
               <div className="flex justify-center mb-8">
-                <div className="bg-white p-2 rounded-2xl border-4 border-gray-700 max-w-[200px] w-full aspect-square relative overflow-hidden shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                <div className="bg-white p-4 rounded-3xl border-4 border-gray-700 max-w-[320px] w-full aspect-square relative overflow-hidden shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
                   <Image 
                     src="/qr.jpeg" 
                     alt="Payment QR Code" 
                     fill
-                    className="object-cover"
+                    className="object-contain p-2"
                   />
                 </div>
               </div>
