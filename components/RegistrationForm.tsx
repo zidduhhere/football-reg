@@ -8,6 +8,7 @@ import Image from 'next/image'
 export default function RegistrationForm({ availableCountries }: { availableCountries: string[] }) {
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
+  const [showSuccess, setShowSuccess] = useState(false)
 
   useEffect(() => {
     const savedData = localStorage.getItem('footballRegForm')
@@ -51,7 +52,8 @@ export default function RegistrationForm({ availableCountries }: { availableCoun
     if (result.error) {
       setMessage({ type: 'error', text: result.error })
     } else {
-      setMessage({ type: 'success', text: 'Registration secured. Awaiting administration approval.' })
+      setShowSuccess(true)
+      setMessage(null)
       form.reset()
       localStorage.removeItem('footballRegForm')
     }
@@ -122,8 +124,8 @@ export default function RegistrationForm({ availableCountries }: { availableCoun
       </div>
 
       <div className="bg-white p-6 sm:p-12 rounded-3xl border border-gray-200 shadow-sm">
-        {message && (
-          <div className={`p-5 mb-10 rounded-xl font-bold text-center text-sm sm:text-base border-2 ${message.type === 'success' ? 'bg-green-50 text-green-900 border-green-900' : 'bg-red-50 text-red-900 border-red-900'}`}>
+        {message && message.type === 'error' && (
+          <div className="p-5 mb-10 rounded-xl font-bold text-center text-sm sm:text-base border-2 bg-red-50 text-red-900 border-red-900">
             {message.text}
           </div>
         )}
@@ -231,6 +233,26 @@ export default function RegistrationForm({ availableCountries }: { availableCoun
           </div>
         </form>
       </div>
+
+      {showSuccess && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm">
+          <div className="bg-white w-full max-w-md p-8 sm:p-12 rounded-3xl border-4 border-gray-900 shadow-[12px_12px_0px_0px_rgba(17,24,39,1)] text-center relative">
+            <div className="w-20 h-20 bg-[#EFFF04] border-4 border-gray-900 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[4px_4px_0px_0px_rgba(17,24,39,1)]">
+              <Trophy className="w-10 h-10 text-gray-900" />
+            </div>
+            <h2 className="text-3xl font-black uppercase tracking-tighter text-gray-900 mb-4">Secured!</h2>
+            <p className="text-gray-600 font-bold uppercase tracking-wider text-sm mb-8">
+              Your squad's registration has been submitted and is awaiting admin approval.
+            </p>
+            <button 
+              onClick={() => setShowSuccess(false)}
+              className="w-full py-4 bg-gray-900 hover:bg-black text-white text-lg font-black uppercase tracking-widest rounded-xl transition-all active:scale-[0.98] border-2 border-transparent shadow-[0px_6px_0px_0px_rgba(209,213,219,1)] hover:shadow-[0px_3px_0px_0px_rgba(209,213,219,1)] hover:translate-y-1 active:shadow-none active:translate-y-2"
+            >
+              Done
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
