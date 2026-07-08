@@ -11,17 +11,19 @@ export default function RegistrationForm({ availableCountries }: { availableCoun
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    const form = e.currentTarget
+    
     setLoading(true)
     setMessage(null)
     
-    const formData = new FormData(e.currentTarget)
+    const formData = new FormData(form)
     const result = await submitRegistration(formData)
     
     if (result.error) {
       setMessage({ type: 'error', text: result.error })
     } else {
       setMessage({ type: 'success', text: 'Registration secured. Awaiting administration approval.' })
-      e.currentTarget.reset()
+      form.reset()
     }
     setLoading(false)
   }
@@ -138,15 +140,17 @@ export default function RegistrationForm({ availableCountries }: { availableCoun
               {Array.from({ length: 10 }).map((_, i) => (
                 <div key={i}>
                   <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2" htmlFor={`player_${i+1}`}>
-                    Player {i + 1} {i === 0 && <span className="text-gray-900 bg-gray-200 px-2 py-0.5 rounded ml-2">CAPTAIN</span>}
+                    Player {i + 1} 
+                    {i === 0 && <span className="text-gray-900 bg-gray-200 px-2 py-0.5 rounded ml-2">CAPTAIN</span>}
+                    {i >= 7 && <span className="text-gray-400 font-normal normal-case tracking-normal ml-2">(Optional)</span>}
                   </label>
                   <input 
                     type="text" 
                     id={`player_${i+1}`} 
                     name={`player_${i+1}`} 
-                    required 
+                    required={i < 7} 
                     className="w-full p-4 bg-gray-50 border-2 border-gray-200 rounded-xl focus:border-gray-900 focus:bg-white transition-all outline-none text-gray-900 placeholder-gray-400 font-medium"
-                    placeholder={`Full Name`}
+                    placeholder={i < 7 ? `Full Name` : `Full Name (Optional)`}
                   />
                 </div>
               ))}

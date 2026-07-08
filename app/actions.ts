@@ -26,17 +26,17 @@ export async function submitRegistration(formData: FormData) {
   const country = formData.get('country') as string
   const transactionId = formData.get('transactionId') as string
   
-  // Extract 10 players
+  // Extract up to 10 players
   const players = []
   for (let i = 1; i <= 10; i++) {
     const playerName = formData.get(`player_${i}`) as string
-    if (playerName) {
-      players.push({ name: playerName, isCaptain: i === 1 })
+    if (playerName && playerName.trim() !== '') {
+      players.push({ name: playerName.trim(), isCaptain: i === 1 })
     }
   }
 
-  if (players.length !== 10) {
-    return { error: 'Please provide exactly 10 players.' }
+  if (players.length < 7) {
+    return { error: 'Please provide at least 7 players.' }
   }
 
   const { error } = await supabase
