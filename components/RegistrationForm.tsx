@@ -163,8 +163,19 @@ export default function RegistrationForm({ availableCountries }: { availableCoun
             <div className="bg-gray-900 p-6 sm:p-8 rounded-2xl">
               <p className="text-sm font-medium text-gray-300 mb-6 leading-relaxed">
                 Secure your spot by transferring the registration fee of <strong className="text-white">600 INR</strong>.
-                Enter your transaction reference number below for verification.
+                Scan the QR code below to make your payment, then enter your transaction reference number for verification.
               </p>
+
+              <div className="flex justify-center mb-8">
+                <div className="bg-white p-2 rounded-2xl border-4 border-gray-700 max-w-[200px] w-full aspect-square relative overflow-hidden shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                  <Image 
+                    src="/qr.jpeg" 
+                    alt="Payment QR Code" 
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              </div>
               
               <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2" htmlFor="transactionId">Transaction Reference</label>
               <input 
