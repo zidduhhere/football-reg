@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { submitRegistration } from '@/app/actions'
 import { Trophy, Users, MapPin, CalendarDays, Wallet, ChevronRight } from 'lucide-react'
 import Image from 'next/image'
@@ -8,6 +8,35 @@ import Image from 'next/image'
 export default function RegistrationForm({ availableCountries }: { availableCountries: string[] }) {
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
+
+  useEffect(() => {
+    const savedData = localStorage.getItem('footballRegForm')
+    if (savedData) {
+      try {
+        const parsed = JSON.parse(savedData)
+        const formElement = document.getElementById('registrationForm') as HTMLFormElement
+        if (formElement) {
+          Object.keys(parsed).forEach(key => {
+            const input = formElement.elements.namedItem(key) as HTMLInputElement | HTMLSelectElement
+            if (input) {
+              input.value = parsed[key]
+            }
+          })
+        }
+      } catch (e) {
+        console.error("Failed to parse local storage form data")
+      }
+    }
+  }, [])
+
+  const handleFormChange = (e: React.FormEvent<HTMLFormElement>) => {
+    const formData = new FormData(e.currentTarget)
+    const dataObj: Record<string, string> = {}
+    formData.forEach((value, key) => {
+      dataObj[key] = value.toString()
+    })
+    localStorage.setItem('footballRegForm', JSON.stringify(dataObj))
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -24,6 +53,7 @@ export default function RegistrationForm({ availableCountries }: { availableCoun
     } else {
       setMessage({ type: 'success', text: 'Registration secured. Awaiting administration approval.' })
       form.reset()
+      localStorage.removeItem('footballRegForm')
     }
     setLoading(false)
   }
@@ -98,7 +128,7 @@ export default function RegistrationForm({ availableCountries }: { availableCoun
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-12">
+        <form id="registrationForm" onChange={handleFormChange} onSubmit={handleSubmit} className="space-y-12">
           
           <div className="space-y-6">
             <h3 className="text-2xl font-black uppercase tracking-tight text-gray-900 mb-6">1. Squad Identity</h3>
